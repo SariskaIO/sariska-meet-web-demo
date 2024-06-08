@@ -7,6 +7,7 @@ import {useWindowResize} from "../../../hooks/useWindowResize";
 import {useDocumentSize} from "../../../hooks/useDocumentSize";
 import classnames from "classnames";
 import * as Constants from "../../../constants";
+import { getRandomParticipant } from '../../../utils';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -34,12 +35,16 @@ const SpeakerLayout = ({dominantSpeakerId}) => {
     if ( conference.getParticipantCount() === 2 ) {
         largeVideoId = conference.getParticipantsWithoutHidden()[0]?._id;
     }
-    largeVideoId = layout.pinnedParticipant.participantId || layout.presenterParticipantIds.slice(0).pop() || largeVideoId || dominantSpeakerId || myUserId;
+    const largeVideoParticipant = getRandomParticipant(conference, 'admin', null);
+    
+    largeVideoId = largeVideoParticipant?._id || layout.pinnedParticipant.participantId || layout.presenterParticipantIds.slice(0).pop() || largeVideoId || dominantSpeakerId || myUserId;
     isPresenter = layout.presenterParticipantIds.find(item=>item===largeVideoId);
     if ( layout.pinnedParticipant.isPresenter === false ) {
         isPresenter = false;
     }
-    participantTracks = remoteTracks[largeVideoId];
+    if(largeVideoParticipant){
+        participantTracks = remoteTracks[largeVideoId];
+    }
     participantDetails =  conference.participants.get(largeVideoId)?._identity?.user; 
 
     if (largeVideoId === conference.myUserId()){

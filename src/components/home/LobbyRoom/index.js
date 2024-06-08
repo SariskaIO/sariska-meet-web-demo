@@ -266,7 +266,7 @@ const LobbyRoom = ({ tracks }) => {
       dispatch(updateProfile({key: "color", value: null}));
     }
   };
-  
+
   const handleSubmit = async () => {
     if (!meetingTitle) {
       dispatch(

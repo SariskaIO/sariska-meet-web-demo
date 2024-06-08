@@ -1047,24 +1047,6 @@ const ActionButtons = ({ dominantSpeakerId }) => {
         >
           {chatList("right")}
         </DrawerBox>
-        <Hidden smDown>
-        <StyledTooltip
-          title={
-            layout.type === SPEAKER || layout.type === PRESENTATION
-              ? "Grid View"
-              : "Speaker View"
-          }
-        >
-          {layout.type === SPEAKER || layout.type === PRESENTATION ? (
-            <ViewListIcon onClick={toggleView} className={classes.subIcon} />
-          ) : (
-            <ViewComfyIcon
-              onClick={toggleView}
-              className={classnames(classes.subIcon, classes.active)}
-            />
-          )}
-        </StyledTooltip>
-        </Hidden>
         <Hidden mdUp>
         <StyledTooltip title="Leave Call">
           <CallEndIcon onClick={leaveConference} className={classes.end} />

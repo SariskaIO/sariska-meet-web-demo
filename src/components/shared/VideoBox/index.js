@@ -5,7 +5,8 @@ import {
   Tooltip,
   Typography,
 } from "@material-ui/core";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
+import SariskaCollaborativeAnnotation from "sariska-collaborative-annotation-sdk";
 import { color } from "../../../assets/styles/_color";
 import Video from "../Video";
 import Audio from "../Audio";
@@ -16,7 +17,7 @@ import MicOffIcon from "@material-ui/icons/MicOff";
 import { setPinParticipant } from "../../../store/actions/layout";
 import PinParticipant from "../PinParticipant";
 import classnames from "classnames";
-import { videoShadow, calculateSteamHeightAndExtraDiff, isMobileOrTab } from "../../../utils";
+import { videoShadow, calculateSteamHeightAndExtraDiff, isMobileOrTab, isModerator, isModeratorLocal } from "../../../utils";
 import AudioLevelIndicator from "../AudioIndicator";
 import SubTitle from "../SubTitle";
 import { useDocumentSize } from "../../../hooks/useDocumentSize";
@@ -182,6 +183,7 @@ const VideoBox = ({
   const subtitle = useSelector((state) => state.subtitle);
   const conference = useSelector((state) => state.conference);
   const { documentWidth, documentHeight } = useDocumentSize();
+  const canvasRef = useRef(null);
 
   const togglePinParticipant = (id) => {
     dispatch(setPinParticipant(id, isPresenter));
@@ -216,6 +218,18 @@ const VideoBox = ({
       onMouseEnter={() => setVisiblePinPartcipant(true)}
       onMouseLeave={() => setVisiblePinPartcipant(false)}
       className={classes.root}
+    >
+    <SariskaCollaborativeAnnotation
+            width={width}
+            height={height}
+            lineColor={'#000'}
+            lineWidth={4}
+            zIndex = {2}
+            isModerator={isModerator(conference)}
+            isModeratorLocal={isModeratorLocal(conference)}
+            isParticipantAccess={false}
+            isCanvasClear={false}
+            parentCanvasRef={canvasRef}
     >
       {conference?.getParticipantCount() > 1 &&
         isActiveSpeaker &&
@@ -287,6 +301,7 @@ const VideoBox = ({
           <SubTitle subtitle={subtitle} />
         </Box>
       )}
+      </SariskaCollaborativeAnnotation>
     </Box>
   );
 };
