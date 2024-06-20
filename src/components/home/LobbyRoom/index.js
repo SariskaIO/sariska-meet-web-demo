@@ -61,6 +61,7 @@ const LobbyRoom = ({ tracks }) => {
   const [settingsState, setSettingsState] = React.useState({
     right: false,
   });
+  
   const moderator = useRef(true);
 
   const useStyles = makeStyles((theme) => ({

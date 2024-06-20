@@ -1,5 +1,5 @@
 import {Box, makeStyles} from '@material-ui/core';
-import React from 'react'
+import React, { useState } from 'react'
 import VideoBox from '../../shared/VideoBox';
 import ParticipantPane from "../../shared/ParticipantPane";
 import {useSelector} from "react-redux";
@@ -28,9 +28,11 @@ const SpeakerLayout = ({dominantSpeakerId}) => {
     const localTracks = useSelector(state => state.localTrack);
     const remoteTracks = useSelector(state => state.remoteTrack);
     const resolution = useSelector(state => state.media?.resolution);
+    const [lineColor, setLineColor] = useState(localStorage.getItem('lineColor') || '#fff');
     const myUserId = conference.myUserId();
     const classes = useStyles();
     let largeVideoId, isPresenter, participantTracks, participantDetails, justifyContent;
+    const [isCanvasClear, setIsCanvasClear] = useState(false);
 
     if ( conference.getParticipantCount() === 2 ) {
         largeVideoId = conference.getParticipantsWithoutHidden()[0]?._id;
@@ -81,6 +83,18 @@ const SpeakerLayout = ({dominantSpeakerId}) => {
         justifyContent = "space-evenly";
     }
     
+    const handleColor = () => {
+        let colors = ['#fff', '#ff0000', '#ff0', '#ee7e24', '#00ff00', '#0000ff'];
+        let randomColor = colors[Math.floor(Math.random()*4)]
+        setLineColor(randomColor);
+        localStorage.setItem('lineColor', randomColor)
+      }
+      
+  const handleClearCanvas = () => {
+    setIsCanvasClear(true)
+    setTimeout(()=>setIsCanvasClear(false), 1000);
+  }
+
     return (
         <Box style={{justifyContent}}  className={activeClasses} >
             <VideoBox
@@ -94,6 +108,10 @@ const SpeakerLayout = ({dominantSpeakerId}) => {
                 participantDetails={participantDetails}
                 participantTracks={participantTracks}
                 localUserId={conference.myUserId()}
+                handleColor={handleColor}
+                lineColor={lineColor}
+                handleClearCanvas={handleClearCanvas}
+                isCanvasClear={isCanvasClear}
             />
             <ParticipantPane
                 isPresenter={isPresenter}

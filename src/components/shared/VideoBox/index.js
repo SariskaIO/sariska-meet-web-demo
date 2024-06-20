@@ -1,6 +1,7 @@
 import {
   Avatar,
   Box,
+  Button,
   makeStyles,
   Tooltip,
   Typography,
@@ -35,7 +36,11 @@ const VideoBox = ({
   isFilmstrip,
   isLargeVideo,
   isTranscription,
-  numParticipants
+  numParticipants,
+  handleColor,
+  lineColor,
+  handleClearCanvas,
+  isCanvasClear
 }) => {
     
   const useStyles = makeStyles((theme) => ({
@@ -211,7 +216,11 @@ const VideoBox = ({
       }
       return `${(videoStreamHeight * 16) / 9}px`
     }
-
+    
+    useEffect(()=>{
+      console.log('prop changed', lineColor)
+    },[lineColor])
+    
   return (
     <Box
       style={{ width: `${width}px`, height: `${height}px` }}
@@ -222,13 +231,13 @@ const VideoBox = ({
     <SariskaCollaborativeAnnotation
             width={width}
             height={height}
-            lineColor={'#000'}
+            lineColor={localStorage.getItem('lineColor')}
             lineWidth={4}
             zIndex = {2}
             isModerator={isModerator(conference)}
             isModeratorLocal={isModeratorLocal(conference)}
             isParticipantAccess={false}
-            isCanvasClear={false}
+            isCanvasClear={isCanvasClear}
             parentCanvasRef={canvasRef}
     >
       {conference?.getParticipantCount() > 1 &&
@@ -285,6 +294,8 @@ const VideoBox = ({
         )}
       </Box>
       <Box className={classnames(classes.textBox, { userDetails: true })}>
+        <Button onClick={handleColor} style={{color: lineColor, zIndex: 999}}>Color</Button>
+        <Button onClick={handleClearCanvas} style={{color: lineColor, zIndex: 999}}>Clear</Button>
         <Typography>
           {localUserId === participantDetails?.id
             ? "You"

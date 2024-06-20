@@ -530,12 +530,12 @@ const Meeting = () => {
     SariskaMediaTransport.setNetworkInfo({ isOnline });
   }, [isOnline]);
 
-  useEffect(()=> {
-    if(isMobileOrTab()) {
-      if(layout.type === SPEAKER)
-      dispatch(setLayout(GRID));
-    }
-  },[])
+  // useEffect(()=> {
+  //   if(isMobileOrTab()) {
+  //     if(layout.type === SPEAKER)
+  //     dispatch(setLayout(GRID));
+  //   }
+  // },[])
   
   if (!conference || !conference.isJoined()) {
     return <Home />;
@@ -555,9 +555,9 @@ const Meeting = () => {
       {layout.type === SPEAKER && (
         <SpeakerLayout dominantSpeakerId={dominantSpeakerId} />
       )}
-      {layout.type === GRID && (
+      {/* {layout.type === GRID && (
         <GridLayout dominantSpeakerId={dominantSpeakerId} />
-      )}
+      )} */}
       
       {layout.type === PRESENTATION && (
         <PresentationLayout dominantSpeakerId={dominantSpeakerId} />
