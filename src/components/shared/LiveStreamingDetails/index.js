@@ -1,6 +1,7 @@
 import {
   Box,
   Button,
+  Tooltip,
   Typography,
   makeStyles,
 } from "@material-ui/core";
@@ -59,18 +60,26 @@ const LiveStreamingDetails = ({featureStates, stopStreaming, startStreaming, str
     <Box className={classes.root}>
       <Box sx={{mt: 1}}>
       <SearchBox
-          placeholder={"Enter You Tube Stream key"}
+          placeholder={"Enter YouTube Stream key"}
           value={streamKey}
           id="streamKey"
           name="streamKey"
           handleChange={handleStreamKeyChange}
         />
-        <Button
-          variant="outlined"
-          onClick={featureStates.streaming ? stopStreaming : startStreaming}
-          className={classes.streamingButton}
-        >{featureStates.streaming ? "Stop Streaming" : "Start Streaming"}
-        </Button>
+        <Tooltip
+          title={!streamKey ? "Enter a stream key to start streaming" : ""}
+          placement="top"
+        >
+        <span>
+          <Button
+            variant="outlined"
+            onClick={featureStates.streaming ? stopStreaming : startStreaming}
+            className={classes.streamingButton}
+            disabled={!streamKey}
+          >{featureStates.streaming ? "Stop Streaming" : "Start Streaming"}
+          </Button>
+          </span>
+        </Tooltip>
         {featureStates.streaming && Object.keys(streamingUrls)?.length>0 ? <Box>
         <Typography style={{color: color.white, marginTop: '0.5rem', marginLeft: '8px', marginBottom: '8px'}}>Click to copy Streaming Url</Typography>
           {STREAMING_URL_KEYS.map(url => (
