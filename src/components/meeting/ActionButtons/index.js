@@ -948,11 +948,12 @@ const ActionButtons = ({ dominantSpeakerId }) => {
           <Box>{profile.meetingTitle}</Box>
         </Box>
       </Hidden>
-      <Hidden smDown>
         <Box sx={{display: 'flex'}}>
+        <Hidden smDown>
         <StyledTooltip title="Leave Call">
           <CallEndIcon onClick={leaveConference} className={classes.end} />
         </StyledTooltip>
+        </Hidden>
         <StyledTooltip title={"Go Live"}>
           <Box className={classes.liveBox} onClick={toggleLiveDrawer("right", true)} >          
             <FiberManualRecordIcon className={classes.dot} />
@@ -966,7 +967,6 @@ const ActionButtons = ({ dominantSpeakerId }) => {
         >
           {liveList("right")}
         </DrawerBox>
-      </Hidden>
       <LiveStreamDialog
         close={closeLiveStreamDialog}
         createLiveStream={createLiveStream}
