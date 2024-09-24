@@ -128,3 +128,14 @@ export const STREAMING_URL_KEYS = [
     'srt_url',
     'vod_url'
   ]
+
+  export const ADMIN_IDS = [
+    '9876543210', '9999534580', '8447735010', '9855505638'
+  ] 
+
+  export const ADMINS_INFO = [
+    {id: ADMIN_IDS[0], name: 'admin'},
+    {id: ADMIN_IDS[1], name: 'Harish Bisht'},
+    {id: ADMIN_IDS[2], name: 'Anil Kotnala'},
+    {id: ADMIN_IDS[3], name: 'Vinod Moderator'},
+  ]

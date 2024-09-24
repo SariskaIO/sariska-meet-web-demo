@@ -17,7 +17,8 @@ import {
   getToken,
   trimSpace,
   detectUpperCaseChar,
-  getRandomColor
+  getRandomColor,
+  getUserNameById
 } from "../../../utils";
 import { addThumbnailColor } from "../../../store/actions/color";
 import { useDispatch, useSelector } from "react-redux";
@@ -278,12 +279,12 @@ const LobbyRoom = ({ tracks }) => {
       );
       return;
     }
-
+    let username = getUserNameById(name) || name;
     setLoading(true);
     let avatarColor = profile?.color ?  profile?.color : getRandomColor();
     dispatch(updateProfile({key: "color", value: avatarColor}));
 
-    const token = await getToken(profile, name, avatarColor);
+    const token = await getToken(profile, name, username, avatarColor);
     const connection = new SariskaMediaTransport.JitsiConnection(
       token,
       meetingTitle,
@@ -294,7 +295,7 @@ const LobbyRoom = ({ tracks }) => {
       SariskaMediaTransport.events.connection.CONNECTION_ESTABLISHED,
       () => {
         dispatch(addConnection(connection));
-        createConference(connection);
+        createConference(connection, username);
       }
     );
 
@@ -305,7 +306,7 @@ const LobbyRoom = ({ tracks }) => {
         if (
           error === SariskaMediaTransport.errors.connection.PASSWORD_REQUIRED
         ) {
-          const token = await getToken(profile, name, moderator.current);
+          const token = await getToken(profile, name, username, moderator.current);
           connection.setToken(token); // token expired, set a new token
         }
         if (
@@ -327,7 +328,7 @@ const LobbyRoom = ({ tracks }) => {
     connection.connect();
   };
 
-  const createConference = async (connection) => {
+  const createConference = async (connection, username) => {
     // const conference = connection.initJitsiConference({
     //   createVADProcessor: SariskaMediaTransport.effects.createRnnoiseProcessor,
     // });
@@ -380,7 +381,7 @@ const LobbyRoom = ({ tracks }) => {
           error === SariskaMediaTransport.errors.conference.MEMBERS_ONLY_ERROR
         ) {
           setButtonText("Asking to join");
-          conference.joinLobby(name || conference?.getLocalUser()?.name);
+          conference.joinLobby(username || conference?.getLocalUser()?.username);
         }
 
         if (

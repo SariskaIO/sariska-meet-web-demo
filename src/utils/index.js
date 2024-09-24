@@ -1,5 +1,5 @@
 import { useLocation } from "react-router-dom";
-import {GENERATE_TOKEN_URL, GET_PRESIGNED_URL, ENTER_FULL_SCREEN_MODE, LIVE_STREAMING_START_URL, LIVE_STREAMING_STOP_URL} from "../constants";
+import {GENERATE_TOKEN_URL, GET_PRESIGNED_URL, LIVE_STREAMING_START_URL, LIVE_STREAMING_STOP_URL, ADMINS_INFO, ADMIN_IDS} from "../constants";
 import linkifyHtml from 'linkify-html';
 
 const Compressor = require('compressorjs');
@@ -48,7 +48,15 @@ export function createDeferred() {
     return deferred;
 }
 
-export async function getToken(profile, name, avatarColor) {
+export const getAdmin = (name) => {
+    return ADMINS_INFO.find(admin => admin.id === name);
+}
+
+export const isAdmin = (name) => {
+   return getAdmin(name) ? true : false; 
+}
+
+export async function getToken(profile, name, username, avatarColor) {
     const body = {
         method: "POST",
         headers: {
@@ -59,9 +67,9 @@ export async function getToken(profile, name, avatarColor) {
             user: {
                 id: profile.id,
                 avatar: avatarColor,
-                name: name,
+                name: username,
                 email: profile.email,
-               // moderator: name === 'admin' ? true : false
+                moderator: isAdmin(name)
             },
             exp: "48 hours"
         })
@@ -692,4 +700,13 @@ export const isParticipantLocal = (conference, id) => {
         return;
     }
     return conference?.myUserId()===id;
+}
+
+export const getUserNameById = (id) => {
+    let admin = getAdmin(id);
+    if(admin) {
+        return admin.name
+    }else{
+        return null;
+    }
 }
